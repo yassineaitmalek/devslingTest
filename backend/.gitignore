@@ -44,7 +44,7 @@ src/main/resources/rebel.xml
 
 # Locally stored "Eclipse launch configurations"
 *.launch
-
+upload
 # CDT-specific
 .cproject
 

@@ -7,6 +7,9 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
+import org.springdoc.api.annotations.ParameterObject;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -25,12 +28,12 @@ import com.devsling.constants.FuelType;
 import com.devsling.controllers.config.AbstractController;
 import com.devsling.controllers.config.ApiDataResponse;
 import com.devsling.dto.CarDTO;
+import com.devsling.dto.CarSearchDTO;
 import com.devsling.dto.FileDTO;
 import com.devsling.models.local.Car;
 import com.devsling.services.CarsService;
 
 import lombok.RequiredArgsConstructor;
-import reactor.core.publisher.Mono;
 
 @Validated
 @RestController
@@ -39,6 +42,13 @@ import reactor.core.publisher.Mono;
 public class CarsController implements AbstractController {
 
   private final CarsService carsService;
+
+  @GetMapping
+  public ResponseEntity<ApiDataResponse<Page<Car>>> getCars(@ParameterObject @ModelAttribute CarSearchDTO carSearchDTO,
+      @ParameterObject Pageable pageable) {
+
+    return ok(carsService.getCars(carSearchDTO, pageable));
+  }
 
   @PostMapping(consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
   public ResponseEntity<ApiDataResponse<Optional<Car>>> createCar(@Valid @ModelAttribute CarDTO carDTO) {
@@ -88,7 +98,7 @@ public class CarsController implements AbstractController {
 
   @ResponseBody
   @GetMapping("/{carId}/video/stream")
-  public Mono<ResponseEntity<byte[]>> streamVideo(@Valid @NotNull @NotEmpty @PathVariable String carId,
+  public ResponseEntity<byte[]> streamVideo(@Valid @NotNull @NotEmpty @PathVariable String carId,
       @RequestHeader(value = "Range", required = false) String range) {
 
     return partial(carsService.streamCarVideo(carId, range));

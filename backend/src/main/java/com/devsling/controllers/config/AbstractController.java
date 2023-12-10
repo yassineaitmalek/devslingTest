@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import reactor.core.publisher.Mono;
-
 public interface AbstractController {
 
   public default <T> ResponseEntity<ApiDataResponse<T>> ok(T data) {
@@ -52,15 +50,14 @@ public interface AbstractController {
 
   }
 
-  public default Mono<ResponseEntity<byte[]>> partial(ApiPartialInput apiPartialInput) {
-    return Mono.just(
-        ResponseEntity.status(HttpStatus.PARTIAL_CONTENT)
-            .header("Content-Type", apiPartialInput.getContent() + "/" + apiPartialInput.getExt())
-            .header("Accept-Ranges", "bytes")
-            .header("Content-Length", String.valueOf(apiPartialInput.getLenght()))
-            .header("Content-Range", "bytes" + " " + apiPartialInput.getStart() + "-" + apiPartialInput.getEnd() + "/"
-                + apiPartialInput.getSize())
-            .body(apiPartialInput.getBytes()));
+  public default ResponseEntity<byte[]> partial(ApiPartialInput apiPartialInput) {
+    return ResponseEntity.status(HttpStatus.PARTIAL_CONTENT)
+        .header("Content-Type", apiPartialInput.getContent() + "/" + apiPartialInput.getExt())
+        .header("Accept-Ranges", "bytes")
+        .header("Content-Length", String.valueOf(apiPartialInput.getLenght()))
+        .header("Content-Range", "bytes" + " " + apiPartialInput.getStart() + "-" + apiPartialInput.getEnd() + "/"
+            + apiPartialInput.getSize())
+        .body(apiPartialInput.getBytes());
 
   }
 

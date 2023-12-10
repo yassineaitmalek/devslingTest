@@ -2,16 +2,15 @@ package com.devsling.dto;
 
 import java.time.LocalDate;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.devsling.constants.FuelType;
 import com.devsling.constants.TransmissionType;
+import com.devsling.validation.CarDTOValidator;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,39 +18,38 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Builder
+@CarDTOValidator
 @AllArgsConstructor
 @NoArgsConstructor
 public class CarDTO {
 
-  @NotNull
-  @NotEmpty
+  @Schema(description = "Make of the car")
   private String make;
 
-  @NotNull
-  @NotEmpty
+  @Schema(description = "Model of the car")
   private String model;
 
-  @NotNull
   @JsonFormat(pattern = "yyyy-MM-dd")
   @DateTimeFormat(pattern = "yyyy-MM-dd")
+  @Schema(description = "Registration date of the car")
   private LocalDate registrationDate;
 
-  @NotNull
+  @Schema(description = "Price of the car")
   private Double price;
 
-  @NotNull
+  @Schema(description = "Fuel type of the car")
   private FuelType fuelType;
 
-  @NotNull
+  @Schema(description = "Mileage of the car")
   private Integer mileage;
 
-  @NotNull
+  @Schema(description = "Transmisson type of the car")
   private TransmissionType transmissionType;
 
-  @NotNull
+  @Schema(description = "photo of the car")
   private MultipartFile photoFile;
 
-  @NotNull
+  @Schema(description = "Video of the car")
   private MultipartFile videoFile;
 
 }

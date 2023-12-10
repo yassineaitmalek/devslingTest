@@ -8,6 +8,8 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,6 +19,7 @@ import com.devsling.constants.FuelType;
 import com.devsling.controllers.config.ApiDownloadInput;
 import com.devsling.controllers.config.ApiPartialInput;
 import com.devsling.dto.CarDTO;
+import com.devsling.dto.CarSearchDTO;
 import com.devsling.dto.FileDTO;
 import com.devsling.exception.config.ApiException;
 import com.devsling.models.local.Car;
@@ -24,6 +27,7 @@ import com.devsling.models.local.Photo;
 import com.devsling.models.local.Video;
 import com.devsling.repositories.local.CarsDSLRepository;
 import com.devsling.repositories.local.CarsRepository;
+import com.devsling.specification.CarSpecification;
 import com.devsling.utility.FileUtility;
 
 import lombok.RequiredArgsConstructor;
@@ -40,6 +44,10 @@ public class CarsService {
   private final FileService fileService;
 
   private final ModelMapper modelMapper;
+
+  public Page<Car> getCars(CarSearchDTO carSearchDTO, Pageable pageable) {
+    return carsRepository.findAll(CarSpecification.searchRequest(carSearchDTO), pageable);
+  }
 
   public Optional<Car> createCar(@Valid @NotNull CarDTO carDTO) {
 

@@ -52,6 +52,13 @@ public class CarSpecification extends AbstractSpecification {
   }
 
   public Specification<Car> searchRequest(CarSearchDTO carSearchDTO) {
+    return Optional.ofNullable(carSearchDTO)
+        .map(CarSpecification::searchRequestNotNull)
+        .orElse(null);
+
+  }
+
+  public Specification<Car> searchRequestNotNull(CarSearchDTO carSearchDTO) {
 
     return Arrays.asList(
         transformer(carSearchDTO.getMake(), CarSpecification::hasMake),

@@ -25,7 +25,6 @@ import com.devsling.exception.config.ApiException;
 import com.devsling.models.local.Car;
 import com.devsling.models.local.Photo;
 import com.devsling.models.local.Video;
-import com.devsling.repositories.local.CarsDSLRepository;
 import com.devsling.repositories.local.CarsRepository;
 import com.devsling.specification.CarSpecification;
 import com.devsling.utility.FileUtility;
@@ -38,8 +37,6 @@ import lombok.RequiredArgsConstructor;
 public class CarsService {
 
   private final CarsRepository carsRepository;
-
-  private final CarsDSLRepository carsDSLRepository;
 
   private final FileService fileService;
 
@@ -85,7 +82,7 @@ public class CarsService {
   }
 
   public List<String> getAvailableMakes() {
-    return carsDSLRepository.findAllDistinctMake();
+    return carsRepository.findAllDistinctMake();
   }
 
   public Optional<Car> updateCarPhoto(@Valid @NotNull @NotEmpty String carId, @Valid @NotNull FileDTO fileDTO) {

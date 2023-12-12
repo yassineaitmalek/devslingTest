@@ -100,7 +100,8 @@ public class FileService {
   public ApiDownloadInput downloadAttachement(@Valid @NotNull Attachement attachment) {
     try {
       log.info("download file with id : {}", attachment.getId());
-      return new ApiDownloadInput(getFileBytes(attachment), attachment.getOriginalFileName(), attachment.getExt());
+      return ApiDownloadInput.builder().bytes(getFileBytes(attachment)).fileName(attachment.getOriginalFileName())
+          .ext(attachment.getExt()).build();
     } catch (Exception e) {
       throw new ApiException(e.getMessage(), e);
     }
@@ -173,24 +174,6 @@ public class FileService {
           .build();
     }
     throw new FileUnStreamableException();
-
-  }
-
-  public byte[] readPartialFileBytes(String filePath, long startRange, long rangeLength) {
-    try (RandomAccessFile randomAccessFile = new RandomAccessFile(filePath, "r")) {
-      randomAccessFile.seek(startRange);
-      byte[] data = new byte[(int) rangeLength];
-      int bytesRead = randomAccessFile.read(data);
-
-      if (bytesRead == -1) {
-        throw new ApiException("End of file reached before reading the specified range.");
-      }
-
-      return data;
-    } catch (Exception e) {
-      throw new ApiException(e.getMessage(), e);
-
-    }
 
   }
 

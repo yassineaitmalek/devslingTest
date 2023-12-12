@@ -2,6 +2,8 @@ package com.devsling.controllers.config;
 
 import java.util.Optional;
 
+import com.devsling.exception.config.ApiException;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,7 +26,7 @@ public class ApiDownloadInput {
   public String getValidName() {
 
     if (fileName == null || fileName.trim().isEmpty()) {
-      throw new RuntimeException("a name must be given to the file");
+      throw new ApiException("a name must be given to the file");
     }
     return fileName.concat(Optional.ofNullable(ext).map(e -> ".".concat(e.trim())).orElse(""));
 

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
 public interface AbstractController {
 
@@ -47,6 +48,15 @@ public interface AbstractController {
         .header("Content-Disposition", "attachment; filename=" + apiDownloadInput.getValidName())
         .header("Content-Length", String.valueOf(apiDownloadInput.getBytes().length))
         .body(apiDownloadInput.getBytes());
+
+  }
+
+  public default ResponseEntity<StreamingResponseBody> downloadLarge(ApiDownloadInput apiDownloadInput) {
+    return ResponseEntity.status(HttpStatus.OK)
+        .header("Content-Type", "application/octet-stream")
+        .header("Content-Disposition", "attachment; filename=" + apiDownloadInput.getValidName())
+        .header("Content-Length", String.valueOf(apiDownloadInput.getSize()))
+        .body(apiDownloadInput.getStreamingResponseBody());
 
   }
 

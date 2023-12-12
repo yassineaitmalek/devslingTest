@@ -21,6 +21,7 @@ import org.apache.commons.io.IOUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
 import com.devsling.config.UploadFolder;
 import com.devsling.constants.Constants;
@@ -106,6 +107,34 @@ public class FileService {
       throw new ApiException(e.getMessage(), e);
     }
 
+  }
+
+  public ApiDownloadInput downloadAttachementLarge(@Valid @NotNull Attachement attachment) {
+    try {
+      log.info("download Large file with id : {}", attachment.getId());
+      return ApiDownloadInput.builder().streamingResponseBody(getStreamingResponseBody(attachment))
+          .fileName(attachment.getOriginalFileName())
+          .ext(attachment.getExt()).size(attachment.getFileSize()).build();
+    } catch (Exception e) {
+      throw new ApiException(e.getMessage(), e);
+    }
+
+  }
+
+  public StreamingResponseBody getStreamingResponseBody(@Valid @NotNull Attachement attachment) {
+    File file = new File(attachment.getPath());
+    StreamingResponseBody responseBody = outputStream -> {
+      try (InputStream inputStream = new FileInputStream(file)) {
+        byte[] buffer = new byte[1024];
+        int bytesRead;
+        while ((bytesRead = inputStream.read(buffer)) != -1) {
+          outputStream.write(buffer, 0, bytesRead);
+        }
+      } catch (Exception e) {
+        throw new ApiException(e.getMessage(), e);
+      }
+    };
+    return responseBody;
   }
 
   public void deleteAttachement(@Valid @NotNull @NotEmpty String attachmentId) {

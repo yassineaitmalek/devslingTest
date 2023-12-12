@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
 import com.devsling.constants.FuelType;
 import com.devsling.controllers.config.AbstractController;
@@ -90,10 +91,11 @@ public class CarsController implements AbstractController {
     return download(carsService.downloadCarPhoto(carId));
   }
 
-  @GetMapping("/{carId}/video/download")
-  public ResponseEntity<byte[]> downloadVideo(@Valid @NotNull @NotEmpty @PathVariable String carId) {
+  @GetMapping("/{carId}/video/download/large")
+  public ResponseEntity<StreamingResponseBody> downloadVideoLarge(
+      @Valid @NotNull @NotEmpty @PathVariable String carId) {
 
-    return download(carsService.downloadVideoPhoto(carId));
+    return downloadLarge(carsService.downloadLargeVideoCar(carId));
   }
 
   @ResponseBody

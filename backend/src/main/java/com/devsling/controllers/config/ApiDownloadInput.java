@@ -2,6 +2,8 @@ package com.devsling.controllers.config;
 
 import java.util.Optional;
 
+import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
+
 import com.devsling.exception.config.ApiException;
 
 import lombok.AllArgsConstructor;
@@ -22,6 +24,10 @@ public class ApiDownloadInput {
   private String fileName;
 
   private String ext;
+
+  private Long size;
+
+  private StreamingResponseBody streamingResponseBody;
 
   public String getValidName() {
 

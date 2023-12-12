@@ -131,11 +131,11 @@ public class CarsService {
 
   }
 
-  public ApiDownloadInput downloadVideoPhoto(@Valid @NotNull @NotEmpty String carId) {
+  public ApiDownloadInput downloadLargeVideoCar(@Valid @NotNull @NotEmpty String carId) {
     return carsRepository.findById(carId)
         .map(Car::getVideo)
-        .map(fileService::downloadAttachement)
-        .orElseThrow(() -> new ApiException("error downloading the video of the car with id " + carId));
+        .map(fileService::downloadAttachementLarge)
+        .orElseThrow(() -> new ApiException("error downloading the Large video of the car with id " + carId));
 
   }
 
